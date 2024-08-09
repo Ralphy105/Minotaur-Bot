@@ -1,12 +1,17 @@
 const fs = require('node:fs');
 
 module.exports = async (client) => {
-    let names = await fetch(`https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/players?type=ostracize&quantity=6&startIndex=0&reversed=true`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-    });
+    let names;
+    try {
+        names = await fetch(`https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/players?type=ostracize&quantity=6&startIndex=0&reversed=true`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+    } catch (e) {
+        console.log(`Check danger failed: ${e.message}`);
+    }
 
     const voteNumber = Math.ceil((Date.now().valueOf()-1719511200000)/3600000);
 

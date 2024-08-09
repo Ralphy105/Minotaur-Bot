@@ -9,7 +9,6 @@ const authorized = [
     '218074802835947531', // Tropical
     '731940787771932694', // My alt
     '884706249676046367', // Gojo
-    '1102026521142636554', // Dread
 ];
 
 module.exports = {

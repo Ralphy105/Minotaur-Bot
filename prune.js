@@ -13,7 +13,7 @@ const filename = 'temp.txt';
     const results = [];
 
     for (const name of targets) {
-
+        console.log(name);
         if (whitelist.includes(name)) {
             protected.push(name);
         } else {

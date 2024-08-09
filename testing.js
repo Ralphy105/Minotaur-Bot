@@ -16,31 +16,17 @@ const getCaptcha = require('./captchas');
 const check = require('./checkWhitelist');
 
 (async () => {
-    const arr = [];
-    const max = 1;
-    for (let i=0;i<max;i++) {
-        const captcha = await getCaptcha();
-        arr.push(captcha);
+    const mongo = new MongoClient(connectURI);
+    try {
+        await mongo.connect();
+        const avCol = mongo.db('Minotaur').collection('Autovoters');
+
+        const result = await avCol.updateMany({hasVoted: true}, {$set: {hasVoted: false}});
+
+        console.log(result);
+    } catch (e) {
+
+    } finally {
+        await mongo.close();
     }
-    const start = new Date();
-    for (let i = 0; i < max; i++) {
-
-        const ostracizeVote = await fetch("https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/vote", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                recaptcha: arr[i],
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1sZ3JhbHBoeTEwNUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImdhcmJhZ2UtbWFuIiwicGFpZCI6dHJ1ZSwiaWF0IjoxNzIyMzMzMjk1LCJleHAiOjE3MjM1NDI4OTV9.wDE28P0Q5Z4cq6H5QezOpYRXz_42IfNoqJE6RQNQKQw",
-                type: "ostracize",
-                username: "god"
-            })
-        });
-
-        response = await ostracizeVote.json();
-
-        console.log(response);
-    }
-    console.log(`${new Date() - start} ms`);
 })();

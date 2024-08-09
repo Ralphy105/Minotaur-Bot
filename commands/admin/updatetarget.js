@@ -8,7 +8,6 @@ const authorized = [
     '218074802835947531', // Tropical
     '731940787771932694', // My alt
     '884706249676046367', // Gojo
-    '1102026521142636554', // Dread
 ];
 
 module.exports = {
@@ -26,7 +25,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const update = await require('../../cronjobs/targetMessage')();
+        const update = await require('../../cronjobs/targetMessage')(interaction.client);
 
         if (update) {
             await interaction.editReply("Successfully updated the target message!");
