@@ -16,10 +16,10 @@ module.exports = (client) => {
     const voteMinute = 0; // 0 <= voteMinute < 60
     const captchaMinute = (voteMinute+59)%60;
     const captchas = [];
-    const captchaJob = new CronJob(`5 ${captchaMinute} * * * *`, require('./captchaJob').bind(null, captchas));
+    const captchaJob = new CronJob(`6 ${captchaMinute} * * * *`, require('./captchaJob').bind(null, captchas));
     captchaJob.start();
 
-    const voteJob = new CronJob(`5 ${voteMinute} * * * *`, async () => {
+    const voteJob = new CronJob(`6 ${voteMinute} * * * *`, async () => {
         await require('../runVotes')(client, 'ostracize', undefined, captchas);
         captchas.length = 0;
 	});

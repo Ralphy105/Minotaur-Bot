@@ -24,7 +24,7 @@ module.exports = async (client, type, target, captchas) => {
     try {
         await mongo.connect();
         const avCollection = mongo.db('Minotaur').collection('Autovoters');
-        const autovoters = avCollection.find({$or: [{deactivated: false}, {deactivated: {$exists: false}}]});
+        const avs = avCollection.find({$or: [{deactivated: false}, {deactivated: {$exists: false}}]});
         let count = 0;
         let successes = 0;
         let invalids = 0;
@@ -33,8 +33,13 @@ module.exports = async (client, type, target, captchas) => {
         let ostracized = 0;
         const start = new Date();
 
+        const autovoters = [];
+        for await (const av of avs) {
+            autovoters.push(av);
+        }
+
         const votePromises = [];
-        for await (const av of autovoters) {
+        for (const av of autovoters) {
 
             const promise = (async () => {
                 const num = count++;
@@ -76,7 +81,7 @@ module.exports = async (client, type, target, captchas) => {
                     return;
                 }
 
-                let voted = await voter(id, token, target, type, (captchas ? captchas[count-1] : null));
+                let voted = await voter(av, target, type, (captchas ? captchas[count-1] : null));
                 console.log(`Total time elapsed over ${num} vote attempts: ${(new Date()-start)/1000} seconds`);
 
                 if (typeof voted == 'string' && voted.includes('CAPTCHA FAIL')) {
@@ -90,7 +95,7 @@ module.exports = async (client, type, target, captchas) => {
                 // Retry if "Internal Server Error"
                 while ((tries < 10) && typeof voted == 'string' && voted == "Internal server error") {
                     console.log(`Attempt #${++tries} after Internal Server Error`);
-                    voted = await voter(id, token, target, type);
+                    voted = await voter(av, target, type);
                 }
 
                 let output = `Vote Report #${voteNumber} for User <@${id}>:\nAttempting to **${type}** \`${target}\`\n\n`;
@@ -139,7 +144,7 @@ module.exports = async (client, type, target, captchas) => {
         }
 
         await Promise.allSettled(votePromises);
-        console.log(`Attempted ${count} votes, with ${invalids} accounts that have no token with invalid creds, and ${successes} successes!`);
+        console.log(`Attempted ${count} votes:\nSuccesses: ${successes}\nInvalid Creds: ${invalids}\nAlready Voted: ${alreadyVoted}\nCaptcha Fail: ${captchaFails}\nOstracized: ${ostracized}`);
     } catch (error) {
         console.log(`Failed to cast votes right now, because: ${error}`);
     } finally {

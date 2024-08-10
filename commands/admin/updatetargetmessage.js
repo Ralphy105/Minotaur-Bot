@@ -12,7 +12,7 @@ const authorized = [
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('updatetarget')
+        .setName('updatetargetmessage')
         .setDescription('Updates the target message in the Minotaur server (if a new target was just added to the list)'),
     async execute(interaction) {
         const id = interaction.user.id;

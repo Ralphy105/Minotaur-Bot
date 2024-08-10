@@ -1,8 +1,9 @@
 const getCaptcha = require('./captchas');
 
-module.exports = async (id, token, target, type, captchaToken) => {
+module.exports = async (av, target, type, captchaToken) => {
 
     if (!captchaToken) {
+        console.log('Generating captcha');
         try {
             captchaToken = await getCaptcha();
         } catch (error) {
@@ -17,7 +18,7 @@ module.exports = async (id, token, target, type, captchaToken) => {
         },
         body: JSON.stringify({
             recaptcha: captchaToken,
-            token: token,
+            token: av.token,
             type: type,
             username: target
         })
@@ -25,16 +26,13 @@ module.exports = async (id, token, target, type, captchaToken) => {
 
     response = await ostracizeVote.json();
 
-    console.log(`\n------------------${id}------------------`); // VISUAL SEPARATION
+    console.log(`\n------------------${av.email}------------------\nDiscord: ${av.discordId}`); // VISUAL SEPARATION
 
     if (response.success) {
-        console.log(`Successfully voted for ${target}\nResponse:`);
-        console.log(response);
+        console.log(`Successfully voted for ${target}\nSent at: ${response.lastOstracizeVoteTime}`);
         return true;
     } else {
-        console.log(`Failed to vote\nResponse:`);
-        console.log(response);
-        
+        console.log(`Failed to vote for ${target}\nResponse: ${response.message}`);        
         return response.message;
     }
 }
