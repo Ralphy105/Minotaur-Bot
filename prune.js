@@ -21,6 +21,8 @@ const filename = 'temp.txt';
         }
     }
 
+    console.log(protected);
+
     fs.writeFile(filename, results.join('\r\n'), err => {
         if (err) console.log(`FileIO error occurred: ${err.message}`);
     });
