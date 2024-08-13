@@ -42,7 +42,7 @@ module.exports = {
             switch(interaction.options.getSubcommand()) {
                 case 'signup':
                 
-                    if (existingAv.active) {
+                    if (existingAv && existingAv.active) {
                         await interaction.reply({content: `You're already signed up! To change your registered information, use \`/autovote edit\`. If you think this is a mistake, message <@333592723166724106>.`, ephemeral: inGuild});
                         console.log(`${id}-- ${username} has tried to signup again!`);
                     } else {                        
@@ -80,7 +80,7 @@ module.exports = {
                     break;
 
                 case 'edit':
-                    if (!existingAv.active) {
+                    if (!(existingAv && existingAv.active)) {
                         await interaction.reply({content: `You're not signed up yet! To do so, use \`/autovote signup\`.`, ephemeral: inGuild});
                         console.log(`${id}-- ${username} has tried to edit before signup!`);
                     } else {
@@ -120,7 +120,7 @@ module.exports = {
                     break;
 
                 case 'deactivate':
-                    if (!existingAv.active) {
+                    if (!(existingAv && existingAv.active)) {
                         await interaction.reply({content: `You're not signed up yet! To do so, use \`/autovote signup\`. If you think this is a mistake, message <@333592723166724106>.`, ephemeral: inGuild});
                         console.log(`${id}-- ${username} has tried to edit before signup!`);
 
