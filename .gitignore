@@ -1,2 +1,6 @@
 node_modules
 config.json
+temp.txt
+scheduledTargets.txt
+.gitignore
+testing.js

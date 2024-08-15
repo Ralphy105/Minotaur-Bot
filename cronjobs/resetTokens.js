@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const { connectURI } = require('../config.json');
 
 module.exports = async () => {
+    console.log(`RESETTING TOKENS -- ${Date()}`);
     const mongo = new MongoClient(connectURI);
     try {
         await mongo.connect();
@@ -14,7 +15,7 @@ module.exports = async () => {
         for await (const av of avs) {
             const id = av.discordId;
             try {
-                const token = await getToken(id, av.email, av.password);
+                const token = await getToken(id, av.email, av.password, av.token);
                 await avCollection.updateOne({discordId: id}, {$set: {validInfo: true, token: token}});
             } catch (e) {
                 console.log(`resetTokens: Couldn't get token for user ${id}\nError: ${e.stack}`);

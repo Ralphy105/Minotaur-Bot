@@ -16,7 +16,7 @@ module.exports = (client) => {
     const voteMinute = 0; // 0 <= voteMinute < 60
     const captchaMinute = (voteMinute+59)%60;
     const captchas = [];
-    const captchaJob = new CronJob(`6 ${captchaMinute} * * * *`, require('./captchaJob').bind(null, captchas));
+    const captchaJob = new CronJob(`6 ${captchaMinute} * * * *`, require('./captchaJob').bind(null, captchas, 50));
     captchaJob.start();
 
     const voteJob = new CronJob(`6 ${voteMinute} * * * *`, async () => {
