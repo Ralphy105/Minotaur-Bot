@@ -48,7 +48,7 @@ module.exports = async (id, email, password, token) => {
         return response.token;
     }
 
-    let captchaToken = await getCaptcha();
+    let captchaToken = await getCaptcha.getToken();
 
     let newToken;
     

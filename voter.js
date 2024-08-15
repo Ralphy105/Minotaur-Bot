@@ -5,7 +5,7 @@ module.exports = async (av, target, type, captchaToken) => {
     if (!captchaToken) {
         console.log('Generating captcha');
         try {
-            captchaToken = await getCaptcha();
+            captchaToken = await getCaptcha.getToken();
         } catch (error) {
             return 'CAPTCHA FAIL';
         }
@@ -24,7 +24,7 @@ module.exports = async (av, target, type, captchaToken) => {
         })
     });
 
-    response = await ostracizeVote.json();
+    const response = await ostracizeVote.json();
 
     console.log(`\n------------------${av.email}------------------\nDiscord: ${av.discordId}`); // VISUAL SEPARATION
 
