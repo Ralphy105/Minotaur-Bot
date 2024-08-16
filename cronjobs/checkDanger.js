@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const parseWhitelist = require('../parseWhitelist');
 
 module.exports = async (client) => {
     let names;
@@ -18,7 +19,7 @@ module.exports = async (client) => {
     names = await names.json();
     names = names.players;
 
-    let members = fs.readFileSync('protected.txt','utf-8').toLowerCase().split('\r\n');
+    let members = parseWhitelist();
     let i = 0;
     const danger = [];
     const target = [];
