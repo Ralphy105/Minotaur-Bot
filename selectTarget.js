@@ -8,7 +8,7 @@ module.exports = async (voteState) => {
     const mongo = new MongoClient(connectURI);
     try {
         await mongo.connect();
-        const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\n');
+        const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\r\n');
         
         if (voteState == 'Selection Algorithm' || (schedule.length == 1 && schedule[0] == '')) {
             const ostracizeLeaderboard = await fetch(`https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/players?type=ostracize&quantity=30&startIndex=0&reversed=true`, {
@@ -22,7 +22,7 @@ module.exports = async (voteState) => {
             const topTargets = ostracizeLeaderboardJson.players;
             const topFiveTargets = topTargets.slice(0,5); // Returns a NEW OBJECT of first 5 items of the arary -- doesn't alter calling object
 
-            const targets = fs.readFileSync('targets.txt','utf-8').toLowerCase().split('\n');
+            const targets = fs.readFileSync('targets.txt','utf-8').toLowerCase().split('\r\n');
         
             const protected = mongo.db('Minotaur').collection('Whitelist').find();
             const members = [];

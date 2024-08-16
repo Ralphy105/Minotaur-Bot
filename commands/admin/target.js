@@ -90,7 +90,7 @@ module.exports = {
                 await interaction.editReply(output);
             } else {
                 for (const name of alreadyIn) {
-                    const namesArr = targets.split('\n');
+                    const namesArr = targets.split('\r\n');
                     namesArr.splice(namesArr.indexOf(name), 1);
                     const result = namesArr.join('\r\n');
                     fs.writeFile('targets.txt', result, async err => {

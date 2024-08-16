@@ -3,7 +3,7 @@ const fs = require('node:fs');
 (async () => {
     const { client } = await require('../index');
 
-    const names = fs.readFileSync('./venmostuff/venmos.txt','utf-8').toLowerCase().split('\n');
+    const names = fs.readFileSync('./venmostuff/venmos.txt','utf-8').toLowerCase().split('\r\n');
 
     const bading = await client.users.fetch('333592723166724106');
 
@@ -19,7 +19,7 @@ const fs = require('node:fs');
 // const { QuickDB } = require("quick.db");
 
 // const db = new QuickDB({ filePath: "venmos.sqlite" });
-// const names = fs.readFileSync('./venmostuff/venmos.txt','utf-8').toLowerCase().split('\n');
+// const names = fs.readFileSync('./venmostuff/venmos.txt','utf-8').toLowerCase().split('\r\n');
 
 // (async () => {
 //     for (const name of names) {
