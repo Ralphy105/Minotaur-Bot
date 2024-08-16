@@ -19,7 +19,7 @@ module.exports = async (client) => {
     names = await names.json();
     names = names.players;
 
-    let members = parseWhitelist();
+    let members = await parseWhitelist();
     let i = 0;
     const danger = [];
     const target = [];

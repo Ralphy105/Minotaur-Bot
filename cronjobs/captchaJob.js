@@ -5,7 +5,6 @@ module.exports = async (captchas, num) => {
     try {
         for (let i = 0; i < num; i++) {
             const captcha = await getCaptcha.getToken();
-            console.log(`Finished #${i}`);
             captchas.push(captcha);
         }
     } catch (e) {
