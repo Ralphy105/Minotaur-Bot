@@ -23,7 +23,7 @@ module.exports = {
         const minotaur = await interaction.client.guilds.fetch('1255539802582028349');
 
         const members = await minotaur.members.fetch().catch(console.error);
-        const avIds = fs.readFileSync('./ostracizedVoters.txt','utf8').toLowerCase().split('\r\n');
+        const avIds = fs.readFileSync('./ostracizedVoters.txt','utf8').toLowerCase().split('\n');
         let sent = 0;
         let memberCount = 0;
 

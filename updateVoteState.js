@@ -4,7 +4,7 @@ const config = require(configFileName)
 
 module.exports = async (client) => {
     if (client.voteState == 'Schedule') {
-        const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\r\n');
+        const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\n');
         schedule.splice(0, 1);
         fs.writeFile('scheduledTargets.txt', schedule.join('\r\n'), err => {
             if (err) console.log(`IMPORTANT: Failed to update target schedule: ${err.message}`);

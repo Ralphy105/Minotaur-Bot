@@ -5,7 +5,7 @@ const parseWhitelist = require('./parseWhitelist');
 const filename = 'temp.txt';
 
 (async () => {
-    let targets = await search(fs.readFileSync(filename,'utf8').toLowerCase().split('\r\n'));
+    let targets = await search(fs.readFileSync(filename,'utf8').toLowerCase().split('\n'));
     targets = targets.filter(e => e.alive).map(e => e.name);
     const whitelist = await parseWhitelist(true);
     
