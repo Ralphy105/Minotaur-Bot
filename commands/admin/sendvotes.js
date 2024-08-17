@@ -11,6 +11,9 @@ const authorized = [
     '218074802835947531', // Tropical
     '731940787771932694', // My alt
     '884706249676046367', // Gojo
+    '786486464120750130', // Kin
+    '691797791512461343', // Notaspy
+    '1256440832727191636', // Gem
 ];
 
 module.exports = {
@@ -48,7 +51,7 @@ module.exports = {
 
             const protected = await checkWhitelist(target);
             if (protected) {
-                await interaction.reply(`They are on the whitelist!`);
+                await interaction.reply({content: `They are on the whitelist!`, ephemeral: true});
                 return;
             }
 
