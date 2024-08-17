@@ -8,7 +8,7 @@ module.exports = {
         .addStringOption(option => option.setName('venmos').setDescription('Please enter exact MPV usernames separated ONLY by commas (no added whitespace)').setRequired(true)),
     async execute(interaction) {
         await interaction.deferReply();
-        
+
         const venmos = await search(interaction.options.getString('venmos').toLowerCase().split(','));
         const alive = venmos.filter(e => e.alive).map(e => e.name);
         const invalid = venmos.filter(e => !e.alive).map(e => e.name);
@@ -26,6 +26,6 @@ module.exports = {
             output += `The following names are either ostracized or invalid:\n${invalidStr}`;
         }
 
-        await interaction.reply(output);
+        await interaction.editReply(output);
     }
 };
