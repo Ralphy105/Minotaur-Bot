@@ -13,6 +13,7 @@ const authorized = [
     '786486464120750130', // Kin
     '691797791512461343', // Notaspy
     '1256440832727191636', // Gem
+    '456887123199524876' // 0100
 ];
 
 const filename = 'scheduledTargets.txt';
@@ -70,7 +71,7 @@ module.exports = {
                     input = await search(input);
                     const alive = input.filter(e => e.alive && !schedule.includes(e.name)).map(e => e.name);
                     const invalid = input.filter(e => !e.alive).map(e => e.name);
-                    const alreadyIn = input.filter(e => schedule.includes(e.name));
+                    const alreadyIn = input.filter(e => schedule.includes(e.name)).map(e => e.name);
 
                     const aliveStr = `${alive.join(',')}`;
                     const alreadyInStr = `${alreadyIn.join(',')}`;

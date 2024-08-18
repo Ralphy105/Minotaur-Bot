@@ -49,7 +49,7 @@ module.exports = {
 
             const alive = names.filter(e => e.alive && !targets.includes(e.name)).map(e => e.name);
             const invalid = names.filter(e => !e.alive).map(e => e.name);
-            const alreadyIn = names.filter(e => targets.includes(e.name));
+            const alreadyIn = names.filter(e => targets.includes(e.name)).map(e => e.name);
 
             const aliveStr = `${alive.join(',')}`;
             const alreadyInStr = `${alreadyIn.join(',')}`;
