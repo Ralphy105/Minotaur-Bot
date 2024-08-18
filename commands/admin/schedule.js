@@ -81,9 +81,12 @@ module.exports = {
                         let output = '';
                         if (aliveStr != '') {
                             output += `Successfully added the following names to the schedule:\n\`${aliveStr}\`\n`;
-                            console.log(`User ${interaction.user.username} successfully added ${aliveStr}`);
                             const addNames = alive.join('\r\n');
                             fs.appendFileSync(filename, '\r\n'+addNames);
+
+                            const msg = `User ${interaction.user.username} successfully added ${aliveStr}`;
+                            console.log(msg);
+                            interaction.client.emit('log', msg, true, 'Schedule');
                         }
                         if (alreadyInStr != '') {
                             output += `These names were already in the schedule:\n\`${alreadyInStr}\`\n`;
@@ -99,7 +102,10 @@ module.exports = {
                         let output = '';
                         if (alreadyInStr != '') {
                             output += `Successfully removed the following names from the schedule:\n\`${alreadyInStr}\`\n`;
-                            console.log(`User ${interaction.user.username} successfully removed ${alreadyInStr}`);
+
+                            const msg = `User ${interaction.user.username} successfully removed ${alreadyInStr}`;
+                            console.log(msg);
+                            interaction.client.emit('log', msg, true, 'Schedule');
                         }
                         if (aliveStr != '') {
                             output += `These names weren't in the schedule:\n\`${aliveStr}\`\n`;
