@@ -51,22 +51,22 @@ module.exports = {
             const invalid = names.filter(e => !e.alive).map(e => e.name);
             const alreadyIn = names.filter(e => targets.includes(e.name));
 
-            const aliveStr = `"${alive.join('","')}"`;
-            const alreadyInStr = `"${alreadyIn.join('","')}"`;
-            const invalidStr = `"${invalid.join('","')}"`;
+            const aliveStr = `${alive.join(',')}`;
+            const alreadyInStr = `${alreadyIn.join(',')}`;
+            const invalidStr = `${invalid.join(',')}`;
 
             if (interaction.options.getString('action') == 'add' ) {
                 let output = '';
-                if (aliveStr != '""') {
+                if (aliveStr != '') {
                     output += `Successfully added the following names to the target list:\n\`${aliveStr}\`\n`;
                     console.log(`User ${interaction.user.username} successfully added ${aliveStr}`);
                     const addNames = alive.join('\r\n');
                     fs.appendFileSync(filename, '\r\n'+addNames);
                 }
-                if (alreadyInStr != '""') {
+                if (alreadyInStr != '') {
                     output += `These names were already in the list:\n\`${alreadyInStr}\`\n`;
                 }
-                if (invalidStr != '""') {
+                if (invalidStr != '') {
                     output += `These names are either ostracized or invalid:\n\`${invalidStr}\``;
                 }
                 await interaction.editReply(output);
@@ -75,14 +75,14 @@ module.exports = {
                 fs.writeFileSync(filename, result);
 
                 let output = '';
-                if (alreadyInStr != '""') {
+                if (alreadyInStr != '') {
                     output += `Successfully removed the following names from the target list:\n\`${alreadyInStr}\`\n`;
                     console.log(`User ${interaction.user.username} successfully removed ${alreadyInStr}`);
                 }
-                if (aliveStr != '""') {
+                if (aliveStr != '') {
                     output += `These names weren't in the list:\n\`${aliveStr}\`\n`;
                 }
-                if (invalidStr != '""') {
+                if (invalidStr != '') {
                     output += `These names are either ostracized or invalid:\n\`${invalidStr}\``;
                 }
                 await interaction.editReply(output);

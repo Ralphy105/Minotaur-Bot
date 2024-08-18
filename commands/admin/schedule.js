@@ -54,9 +54,8 @@ module.exports = {
         switch(sc) {
             case 'view':
                 const hour = new Date();
-                let i = hour.getUTCHours();
                 const timestamped = schedule.map(e => {
-                    hour.setUTCHours(i++);
+                    hour.setUTCHours(hour.getUTCHours() + 1);
                     return `**${hour.toUTCString()}:** \`${e}\``;
                 });
                 const output = timestamped.join('\n');
@@ -71,22 +70,22 @@ module.exports = {
                     const invalid = input.filter(e => !e.alive).map(e => e.name);
                     const alreadyIn = input.filter(e => schedule.includes(e.name));
 
-                    const aliveStr = `"${alive.join('","')}"`;
-                    const alreadyInStr = `"${alreadyIn.join('","')}"`;
-                    const invalidStr = `"${invalid.join('","')}"`;
+                    const aliveStr = `${alive.join(',')}`;
+                    const alreadyInStr = `${alreadyIn.join(',')}`;
+                    const invalidStr = `${invalid.join(',')}`;
 
                     if (interaction.options.getString('action') == 'add' ) {
                         let output = '';
-                        if (aliveStr != '""') {
+                        if (aliveStr != '') {
                             output += `Successfully added the following names to the schedule:\n\`${aliveStr}\`\n`;
                             console.log(`User ${interaction.user.username} successfully added ${aliveStr}`);
                             const addNames = alive.join('\r\n');
                             fs.appendFileSync(filename, '\r\n'+addNames);
                         }
-                        if (alreadyInStr != '""') {
+                        if (alreadyInStr != '') {
                             output += `These names were already in the schedule:\n\`${alreadyInStr}\`\n`;
                         }
-                        if (invalidStr != '""') {
+                        if (invalidStr != '') {
                             output += `These names are either ostracized or invalid:\n\`${invalidStr}\``;
                         }
                         await interaction.editReply(output);
@@ -95,14 +94,14 @@ module.exports = {
                         fs.writeFileSync(filename, result);
 
                         let output = '';
-                        if (alreadyInStr != '""') {
+                        if (alreadyInStr != '') {
                             output += `Successfully removed the following names from the schedule:\n\`${alreadyInStr}\`\n`;
                             console.log(`User ${interaction.user.username} successfully removed ${alreadyInStr}`);
                         }
-                        if (aliveStr != '""') {
+                        if (aliveStr != '') {
                             output += `These names weren't in the schedule:\n\`${aliveStr}\`\n`;
                         }
-                        if (invalidStr != '""') {
+                        if (invalidStr != '') {
                             output += `These names are either ostracized or invalid:\n\`${invalidStr}\``;
                         }
                         await interaction.editReply(output);
