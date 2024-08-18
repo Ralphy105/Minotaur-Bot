@@ -50,10 +50,14 @@ const rest = new REST().setToken(token);
 			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: utilityCmds },
 		);
-
-		// Deploy admin commands to Embassy only.
+		// Deploy admin commands to Embassy.
 		const dataA = await rest.put(
 			Routes.applicationGuildCommands(clientId, '1260201840151101563'),
+			{ body: adminCmds },
+		);
+		// And to NSA.
+		await rest.put(
+			Routes.applicationGuildCommands(clientId, '1264811027971706982'),
 			{ body: adminCmds },
 		);
 

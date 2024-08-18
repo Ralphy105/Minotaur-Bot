@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const userExists = require("./search");
 const { MongoClient } = require('mongodb');
 const { connectURI } = require('./config.json');
+const checkWhitelist = require('./checkWhitelist');
 
 module.exports = async (voteState) => {
 
@@ -9,8 +10,10 @@ module.exports = async (voteState) => {
     try {
         await mongo.connect();
         const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\r\n');
+
+        const valid = schedule[0] != '' && !(await checkWhitelist(schedule[0]));
         
-        if (voteState == 'Selection Algorithm' || (schedule.length == 1 && schedule[0] == '')) {
+        if (voteState == 'Selection Algorithm' || !valid) {
             const ostracizeLeaderboard = await fetch(`https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/players?type=ostracize&quantity=30&startIndex=0&reversed=true`, {
                 method: "GET",
                 headers: {
