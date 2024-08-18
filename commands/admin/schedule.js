@@ -84,7 +84,7 @@ module.exports = {
                             const addNames = alive.join('\r\n');
                             fs.appendFileSync(filename, '\r\n'+addNames);
 
-                            const msg = `User ${interaction.user.username} successfully added ${aliveStr}`;
+                            const msg = `${interaction.user} successfully added ${aliveStr}`;
                             console.log(msg);
                             interaction.client.emit('log', msg, true, 'Schedule');
                         }
@@ -103,7 +103,7 @@ module.exports = {
                         if (alreadyInStr != '') {
                             output += `Successfully removed the following names from the schedule:\n\`${alreadyInStr}\`\n`;
 
-                            const msg = `User ${interaction.user.username} successfully removed ${alreadyInStr}`;
+                            const msg = `${interaction.user} successfully removed ${alreadyInStr}`;
                             console.log(msg);
                             interaction.client.emit('log', msg, true, 'Schedule');
                         }

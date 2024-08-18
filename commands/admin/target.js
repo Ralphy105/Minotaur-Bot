@@ -62,6 +62,10 @@ module.exports = {
                     console.log(`User ${interaction.user.username} successfully added ${aliveStr}`);
                     const addNames = alive.join('\r\n');
                     fs.appendFileSync(filename, '\r\n'+addNames);
+
+                    const msg = `${interaction.user} successfully added ${aliveStr}`;
+                    console.log(msg);
+                    interaction.client.emit('log', msg, true, 'Schedule');
                 }
                 if (alreadyInStr != '') {
                     output += `These names were already in the list:\n\`${alreadyInStr}\`\n`;
@@ -78,6 +82,10 @@ module.exports = {
                 if (alreadyInStr != '') {
                     output += `Successfully removed the following names from the target list:\n\`${alreadyInStr}\`\n`;
                     console.log(`User ${interaction.user.username} successfully removed ${alreadyInStr}`);
+
+                    const msg = `${interaction.user} successfully removed ${alreadyInStr}`;
+                    console.log(msg);
+                    interaction.client.emit('log', msg, true, 'Schedule');
                 }
                 if (aliveStr != '') {
                     output += `These names weren't in the list:\n\`${aliveStr}\`\n`;
