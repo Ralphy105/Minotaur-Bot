@@ -40,12 +40,15 @@ module.exports = {
 
         const type = await interaction.options.get('type').value;
         const target = await interaction.options.getString('target');
+        let msg = `${interaction.user} sent ${type} votes`;
 
         if (target) {
+            interaction.client.emit('log', msg+` for \`${target}\``, true);
+
             const alive = await search(target);
 
             if (!alive) {
-                await interaction.reply(`User ${target} is either ostracized or doesn't exist!`);
+                await interaction.reply(`User \`${target}\` is either ostracized or doesn't exist!`);
                 return;
             }
 
@@ -54,10 +57,14 @@ module.exports = {
                 await interaction.reply({content: `They are on the whitelist!`, ephemeral: true});
                 return;
             }
-
+        } else {
+            interaction.client.emit('log', msg, true);
         }
+
         await interaction.reply('Attempting to send votes now!');
 
-        await runVotes(interaction.client, type, target);
+        const output = await runVotes(interaction.client, type, target);
+
+        await interaction.editReply(output);
     }
 }

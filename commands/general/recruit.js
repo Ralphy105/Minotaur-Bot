@@ -126,6 +126,8 @@ module.exports = {
                             await venmoCollection.updateOne({username: name}, {$set: {processing: false}});
                             console.log(`Unknown error: Recruiter ${interaction.user.username} recruiting ${name}`);
                     }
+
+                    await interaction.editReply({content: `The result \`${listener.customId}\` has been logged. Thank you for your help recruiting!`, embeds: [], components: []});
                 } catch (e) {
                     console.error(e);
                 } finally { // Would outer finally close the client? If so, why did I need to re-connect() it inside the callback?
@@ -137,8 +139,6 @@ module.exports = {
             }).on('end', async () => {
                 if (!reacted) {
                     await interaction.editReply({content: `The message timed out. No result has been logged`, embeds: [], components: []});
-                } else {
-                    await interaction.editReply({content: `The result has been logged. Thank you for your help recruiting!`, embeds: [], components: []});
                 }
                 if (extra) {
                     await extra.delete();

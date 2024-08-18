@@ -44,9 +44,14 @@ module.exports = {
                 
                     if (existingAv && existingAv.active) {
                         await interaction.reply({content: `You're already signed up! To change your registered information, use \`/autovote edit\`. If you think this is a mistake, message <@333592723166724106>.`, ephemeral: inGuild});
-                        console.log(`${id}-- ${username} has tried to signup again!`);
-                    } else {                        
-                        console.log(`${id}-- ${username} has signed up!`);
+                        
+                        const msg = `${interaction.user} has tried to signup again!`;
+                        console.log(msg);
+                        interaction.client.emit('log', msg, false, 'Autovote');
+                    } else {
+                        const msg = `${interaction.user} has signed up!`;
+                        console.log(msg);
+                        interaction.client.emit('log', msg, false, 'Autovote');
 
                         const email = interaction.options.getString('email');
                         const password = interaction.options.getString('password');
@@ -67,8 +72,10 @@ module.exports = {
                             await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName}}, {upsert: true});
                             await interaction.followUp({content: `Successfully generated an account token for autovoting. While I'm at it, I enrolled you in my Member Protection System as well!`, ephemeral: inGuild});
                         } catch (e) {
-                            console.log(`/autovote: Couldn't get token for user ${id}/${username}\nError: ${e.message}`);
-        
+                            const msg = `/autovote: Couldn't get token for user ${id}/${username}\nError: ${e.message}`;
+                            console.log(msg);
+                            interaction.client.emit('log', msg, false, 'Autovote');
+
                             if (e.message.includes('LOGIN FAIL')) {
                                 await avCollection.updateOne({discordId: id}, {$set: {validInfo: false}});
                                 await interaction.followUp({content: 'The login credentials provided appear to be incorrect. Please use \`/autovote edit\` to update them. If you think this is a mistake, message <@333592723166724106>.', ephemeral: inGuild});
@@ -82,9 +89,15 @@ module.exports = {
                 case 'edit':
                     if (!(existingAv && existingAv.active)) {
                         await interaction.reply({content: `You're not signed up yet! To do so, use \`/autovote signup\`.`, ephemeral: inGuild});
-                        console.log(`${id}-- ${username} has tried to edit before signup!`);
+                        
+                        const msg = `${interaction.user} has tried to edit before signup!`;
+                        console.log(msg);
+                        interaction.client.emit('log', msg, false, 'Autovote');
                     } else {
-                        console.log(`${id}-- ${username} has edited!`);
+                        const msg = `${interaction.user} has edited!`;
+                        console.log(msg);
+                        interaction.client.emit('log', msg, false, 'Autovote');
+
                         const hasToken = Boolean(existingAv.token);
                         const email = interaction.options.getString('email');
                         const password = interaction.options.getString('password');
@@ -106,8 +119,10 @@ module.exports = {
                                 await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName}}, {upsert: true});
                                 await interaction.followUp({content: `Successfully generated an account token for autovoting. While I'm at it, if you weren't already enrolled in my Member Protection System, you've just been added!`, ephemeral: inGuild});
                             } catch (e) {
-                                console.log(`/autovote: Couldn't get token for user ${id}/${username}\nError: ${e.message}`);
-            
+                                const msg = `/autovote: Couldn't get token for user ${id}/${username}\nError: ${e.message}`;
+                                console.log(msg);
+                                interaction.client.emit('log', msg, false, 'Autovote');
+
                                 if (e.message.includes('LOGIN FAIL')) {
                                     await avCollection.updateOne({discordId: id}, {$set: {validInfo: false}});
                                     await interaction.followUp({content: 'The login credentials provided appear to be incorrect. Please use \`/autovote edit\` to update them. If you think this is a mistake, message <@333592723166724106>.', ephemeral: inGuild});
@@ -122,10 +137,15 @@ module.exports = {
                 case 'deactivate':
                     if (!(existingAv && existingAv.active)) {
                         await interaction.reply({content: `You're not signed up yet! To do so, use \`/autovote signup\`. If you think this is a mistake, message <@333592723166724106>.`, ephemeral: inGuild});
-                        console.log(`${id}-- ${username} has tried to edit before signup!`);
+
+                        const msg = `${interaction.user} has tried to edit before signup!`;
+                        console.log(msg);
+                        interaction.client.emit('log', msg, false, 'Autovote');
 
                     } else {
-                        console.log(`${id}-- ${username} has deactivated!`);
+                        const msg = `${interaction.user} has deactivated!`;
+                        console.log(msg);
+                        interaction.client.emit('log', msg, false, 'Autovote');
 
                         const result = await avCollection.updateOne({discordId: id}, {$set: {active: false}});
 

@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const { connectURI } = require('./config.json');
 
-module.exports = async () => {
+async function resetVoted() {
     const mongo = new MongoClient(connectURI);
     try {
         await mongo.connect();
@@ -12,4 +12,10 @@ module.exports = async () => {
     } finally {
         await mongo.close();
     }
-};
+}
+
+module.exports = async () => resetVoted();
+
+if (process.argv[2] == 'true') {
+    resetVoted();
+}

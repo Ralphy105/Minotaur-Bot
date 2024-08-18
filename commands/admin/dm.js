@@ -34,7 +34,7 @@ module.exports = {
             await mongo.connect();
 
             const autovoterCollection = mongo.db('Minotaur').collection('Autovoters');
-            const avs = autovoterCollection.find();
+            const avs = autovoterCollection.find({active: true});
 
             for await (const av of avs) {
                 avIds.push(av.discordId);
@@ -45,7 +45,7 @@ module.exports = {
                 memberCount++;
                 const name = member.user.displayName;
                 const title = `Dear ${name}, valued member of Minotaur :heart:`;
-                const output = `The leaders of Minotaur and allied servers take great pride in our undying loyalty to our members. However, our ability to defend you is tied intimately to members' participation in our automated voting system. :raised_hands:\nI noticed that you have not yet signed up to Minotaur's, and I'm inviting you to help boost our ability to defend each other! :crossed_swords:\n\nPlease, consider signing up! **We are currently facing a massive threat of ~350 votes.** Every vote we gain makes a difference!\n*It guarantees you a larger portion of the winnings, as well.* :eyes:\n\n\\- Minotaur :robot:\n\nDm <@333592723166724106> with questions!`;
+                const output = `The leaders of Minotaur and allied servers take great pride in our undying loyalty to our members. However, our ability to defend you is tied intimately to members' participation in our automated voting system. :raised_hands:\nI noticed that you have not yet signed up to Minotaur's, and I'm inviting you to help boost our ability to defend each other! :crossed_swords:\n\nPlease, consider signing up! **We are currently facing a massive threat of ~350 votes.** Every vote we gain makes a difference!\n*It guarantees you a larger portion of the winnings, as well.* :eyes:\n\n\\- Minotaur :robot:\n\nDm <@333592723166724106> with questions or concerns!`;
 
                 if (!avIds.includes(id) && !member.roles.cache.get('1256352789307588638')) {
                     try {

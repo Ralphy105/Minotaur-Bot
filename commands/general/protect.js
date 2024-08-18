@@ -35,7 +35,9 @@ module.exports = {
 
             const output = `You have been successfully ${existing ? 'updated within' : 'added to'} the system! You are now under official protection of Minotaur and the Northstar Accord.\nSubmitted username: \`${venmo}\``;
             await interaction.reply({content: output, ephemeral: inGuild});
-            console.log(`${id}-- ${username} has protected!`);
+            const msg = `${interaction.user} has protected${existing ? ' again':''}!`;
+            interaction.client.emit('log', msg, false, 'Protect');
+            console.log(msg);
 
             const guild = await interaction.client.guilds.cache.get('1255539802582028349'); // Minotaur
             const member = await guild.members.fetch(id);

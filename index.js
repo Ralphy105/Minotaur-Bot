@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const { token, startupVoteState } = require('./config.json');
 const startJobs = require('./cronjobs/startJobs');
 
@@ -47,6 +47,20 @@ const commandFolders = fs.readdirSync(foldersPath);
 	}
 
 	await client.login(token);
+
+	const logChannel = await client.channels.fetch('1274463691525456064');
+	const modLogChannel = await client.channels.fetch('1274502604570755206');
+	client.on('log', async (msg, public, context) => {
+		const embed = new EmbedBuilder()
+			.setColor(0x2b2d31)
+			.setAuthor({name: new Date().toUTCString()})
+			.setDescription(msg);
+		if (context) embed.setTitle(context);
+
+		await logChannel.send({embeds: [embed]});
+		if (public === true) modLogChannel.send({embeds: [embed]});
+	});
+
 	module.exports = { client };
 	startJobs(client);
 

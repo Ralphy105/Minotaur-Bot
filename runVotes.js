@@ -24,7 +24,7 @@ module.exports = async (client, type, target, captchas) => {
     try {
         await mongo.connect();
         const avCollection = mongo.db('Minotaur').collection('Autovoters');
-        const avs = avCollection.find({$or: [{deactivated: false}, {deactivated: {$exists: false}}]});
+        const avs = avCollection.find({active: true});
         let count = 0;
         let successes = 0;
         let invalids = 0;
@@ -144,7 +144,10 @@ module.exports = async (client, type, target, captchas) => {
         }
 
         await Promise.allSettled(votePromises);
-        console.log(`Attempted ${count} votes:\nSuccesses: ${successes}\nInvalid Creds: ${invalids}\nAlready Voted: ${alreadyVoted}\nCaptcha Fail: ${captchaFails}\nOstracized: ${ostracized}`);
+        const msg = `Attempted ${count} votes to **${type}** \`${target}\`:\nSuccesses: ${successes}\nInvalid Creds: ${invalids}\nAlready Voted: ${alreadyVoted}\nCaptcha Fail: ${captchaFails}\nOstracized: ${ostracized}`;
+        console.log(msg);
+        client.emit('log', msg, true, 'Voting Record');
+        return msg;
     } catch (error) {
         console.log(`Failed to cast votes right now, because: ${error}`);
     } finally {
