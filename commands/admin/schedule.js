@@ -53,10 +53,12 @@ module.exports = {
         const sc = interaction.options.getSubcommand();
         switch(sc) {
             case 'view':
-                const hour = new Date();
+                const time = new Date();
                 const timestamped = schedule.map(e => {
-                    hour.setUTCHours(hour.getUTCHours() + 1);
-                    return `**${hour.toUTCString()}:** \`${e}\``;
+                    const hour = time.getUTCHours();
+                    const str = `**${time.getUTCMonth()+1}/${time.getUTCDate()}, ${hour}:00 GMT:** \`${e}\``;
+                    time.setUTCHours(hour + 1);
+                    return str;
                 });
                 const output = timestamped.join('\n');
                 await interaction.reply(output);
@@ -108,7 +110,7 @@ module.exports = {
                     }
                 } catch (e) {
                     console.error(e);
-                    interaction.client.emit('log', 'Unknown /schedule error', true, 'Command Error');
+                    interaction.client.emit('log', `Unknown /schedule error: ${e}`, true, 'Command Error');
                     await interaction.editReply({content: 'Invalid input detected. Names must be at least 3 characters long, and in quoteless CSV format: `like,this,example`\nIf your input was correct, please message <@333592723166724106>', ephemeral: true});
                 }
                 break;
