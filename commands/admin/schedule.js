@@ -65,6 +65,10 @@ module.exports = {
                 await interaction.reply(output);
                 break;
             case 'edit':
+                if (interaction.options.getString('targets').indexOf('sex-haver-19') != -1) {
+                    await interaction.reply('Haha you thought L');
+                    return;
+                }
                 await interaction.deferReply();
                 let input = await interaction.options.getString('targets').toLowerCase().split(',');
                 try {
