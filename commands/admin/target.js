@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('node:fs');
+const search = require('../../search');
 
 const authorized = [
     '333592723166724106', // Ralphy
@@ -14,6 +15,8 @@ const authorized = [
     '1256440832727191636', // Gem
 ];
 
+const filename = 'targets.txt';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('target')
@@ -26,7 +29,7 @@ module.exports = {
                     { name: 'Add', value: 'add' },
                     { name: 'Remove', value: 'remove' }
                 ))
-        .addStringOption(option => option.setName('targets').setDescription('Enter target exactly. Use CSV format with quotes for multiple.').setRequired(true)),
+        .addStringOption(option => option.setName('targets').setDescription('Please enter exact MPV usernames separated ONLY by commas (no added whitespace)').setRequired(true)),
     async execute(interaction) {
         const id = interaction.user.id.toString();
 
@@ -38,39 +41,15 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const input = await interaction.options.getString('targets').toLowerCase();
+        const input = await interaction.options.getString('targets').toLowerCase().split(',');
 
         try {
-            const single = input.includes(',')
-            let names;
+            const targets = fs.readFileSync(filename, 'utf8');
+            let names = await search(input);
 
-            if (!single) {
-                names = [input];
-            } else {
-                names = input.split(',');
-                names = names.map(name => name.trim()).map(name => name.substring(1,name.length-1));
-            }
-
-            const alreadyIn = [];
-            const invalid = [];
-            const alive = [];
-
-            const targets = fs.readFileSync('targets.txt', 'utf8');
-
-            for (const name of names) {
-                const isAlive = await require('../../search.js')(name);
-                const inList = targets.includes(name);
-
-                if (isAlive) {
-                    if (inList) {
-                        alreadyIn.push(name);
-                    } else {
-                        alive.push(name);
-                    }
-                } else {
-                    invalid.push(name);
-                }
-            }
+            const alive = names.filter(e => e.alive && !targets.includes(e.name)).map(e => e.name);
+            const invalid = names.filter(e => !e.alive).map(e => e.name);
+            const alreadyIn = names.filter(e => targets.includes(e.name));
 
             const aliveStr = `"${alive.join('","')}"`;
             const alreadyInStr = `"${alreadyIn.join('","')}"`;
@@ -82,7 +61,7 @@ module.exports = {
                     output += `Successfully added the following names to the target list:\n\`${aliveStr}\`\n`;
                     console.log(`User ${interaction.user.username} successfully added ${aliveStr}`);
                     const addNames = alive.join('\r\n');
-                    fs.appendFileSync('targets.txt', '\r\n'+addNames);
+                    fs.appendFileSync(filename, '\r\n'+addNames);
                 }
                 if (alreadyInStr != '""') {
                     output += `These names were already in the list:\n\`${alreadyInStr}\`\n`;
@@ -92,17 +71,12 @@ module.exports = {
                 }
                 await interaction.editReply(output);
             } else {
-                for (const name of alreadyIn) {
-                    const namesArr = targets.split('\r\n');
-                    namesArr.splice(namesArr.indexOf(name), 1);
-                    const result = namesArr.join('\r\n');
-                    fs.writeFile('targets.txt', result, async err => {
-                        if (err) await interaction.editReply(`FileIO error occurred: ${err.message}`);
-                    });
-                }
+                const result = targets.filter(e => !alreadyIn.includes(e)).join('\r\n');
+                fs.writeFileSync(filename, result);
+
                 let output = '';
                 if (alreadyInStr != '""') {
-                    output += `Successfully removed the following names from the list:\n\`${alreadyInStr}\`\n`;
+                    output += `Successfully removed the following names from the target list:\n\`${alreadyInStr}\`\n`;
                     console.log(`User ${interaction.user.username} successfully removed ${alreadyInStr}`);
                 }
                 if (aliveStr != '""') {
@@ -115,7 +89,7 @@ module.exports = {
             }
         } catch (e) {
             console.error(e);
-            await interaction.editReply({content: 'Invalid input detected. Names must be at least 3 characters long, and in quote CSV format: `"like","this","example"`', ephemeral: true});
+            await interaction.editReply({content: 'Invalid input detected. Names must be at least 3 characters long, and in quoteless CSV format: `like,this,example`\nIf your input was correct, please message <@333592723166724106>', ephemeral: true});
         }
     }
 }
