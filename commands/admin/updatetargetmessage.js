@@ -28,7 +28,7 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const update = await require('../../cronjobs/targetMessage')(interaction.client);
+        const update = await require('../../cronjobs/updateMessages').targetMessage(interaction.client);
 
         if (update) {
             await interaction.editReply("Successfully updated the target message!");

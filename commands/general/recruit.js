@@ -55,7 +55,7 @@ module.exports = {
 
             const sends = recruiter.sends + 1;
             const name = venmo.username;
-            let link = `https://venmo.com/?txn=pay&recipients=${name}&amount=0.01&audience=private`;
+            let link = `https://venmo.com/pay&recipients=${name}&amount=0.01&audience=private`;
             const embed = new EmbedBuilder()
                 .setColor(0x2cdcb4)
                 .setAuthor({name: `Recruiter ${interaction.user.displayName}  --  Broadcast #${sends}`})

@@ -10,7 +10,7 @@ module.exports = (client) => {
     const tokenJob = new CronJob('0 0 1,11,21 * *', require('./resetTokens'));
     tokenJob.start();
 
-    const voteMsg = new CronJob('1,10,30,50 * * * *', require('./targetMessage').bind(null, client));
+    const voteMsg = new CronJob('1,10,30,50 * * * *', require('./updateMessages').targetMessage.bind(null, client));
     voteMsg.start();
 
     const voteMinute = 0; // 0 <= voteMinute < 60

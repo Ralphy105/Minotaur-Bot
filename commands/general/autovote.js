@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const { connectURI } = require('../../config.json');
 const jwt = require('jsonwebtoken');
 const getToken = require('../../getToken');
+const updateMsg = require('../../cronjobs/updateMessages');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -156,6 +157,8 @@ module.exports = {
                 default:
                     await interaction.reply({content: "Something went wrong with the command.", ephemeral: true});
             }
+
+            await updateMsg.autovoterList(interaction.client);
 
         } catch (e) { // does get caught here
             console.error(e);
