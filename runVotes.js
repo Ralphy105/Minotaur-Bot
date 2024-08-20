@@ -24,7 +24,7 @@ module.exports = async (client, type, target, captchas) => {
     try {
         await mongo.connect();
         const avCollection = mongo.db('Minotaur').collection('Autovoters');
-        const avs = avCollection.find({active: true});
+        const avs = avCollection.find({active: true}).sort({priortiy: -1, _id: 1});
         let count = 0;
         let successes = 0;
         let invalids = 0;
