@@ -78,6 +78,7 @@ module.exports = async (client, type, target, captchas) => {
 
                 if (type == 'ostracize' && hasVoted === true) {
                     alreadyVoted++;
+                    client.emit('log', `User: <@${id}>`, false, 'Vote Fail');
                     return;
                 }
 

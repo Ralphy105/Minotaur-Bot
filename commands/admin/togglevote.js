@@ -38,10 +38,16 @@ module.exports = {
             .setDescription('Selects the voting target through an algorithm based on the target list, the protected venmos list, and the current MPV leaderboard.')
             .setFooter({text: current});
 
-        const listEmbed = new EmbedBuilder()
+        const scheduleEmbed = new EmbedBuilder()
             .setColor(0x00d1bd)
             .setTitle(`Next Hour's Setting: Schedule`)
             .setDescription('Follows a schedule of voting targets, moving on to the next target each hour regardless of the vote outcome.')
+            .setFooter({text: current});
+
+        const offEmbed = new EmbedBuilder()
+            .setColor(0x677beb)
+            .setTitle(`Next Hour's Setting: Off`)
+            .setDescription('Will not vote automatically. Votes can still be sent manually using `/sendvotes`.')
             .setFooter({text: current});
 
         const toggleButton = new ButtonBuilder()
@@ -51,11 +57,17 @@ module.exports = {
 
         const buttonRow = new ActionRowBuilder().setComponents(toggleButton);
 
-        let reply;
-        if (client.nextVoteState == 'Selection Algorithm') {
-            reply = {embeds: [algorithmEmbed], components: [buttonRow]};
-        } else {
-            reply = {embeds: [listEmbed], components: [buttonRow]};
+        const reply = {components: [buttonRow]};
+        switch (client.nextVoteState) {
+            case 'Selection Algorithm':
+                reply.embeds = [algorithmEmbed];
+                break;
+            case 'Schedule':
+                reply.embeds = [scheduleEmbed];
+                break;
+            case 'Off':
+                reply.embeds = [offEmbed];
+                break;
         }
 
         const menu = await interaction.reply(reply);
@@ -64,22 +76,31 @@ module.exports = {
 
             // SETTINGS INTERACTION HANDLING
             collector.on('collect', async listener => {
-                if (listener.user.id != interaction.user.id) {
+                if (listener.user.id != id) {
                     await listener.reply({content: `You can't interact with someone else's command!`, ephemeral: true});
                     return;
                 }
 
                 if (listener.isButton()) {
-                    if (client.nextVoteState == 'Selection Algorithm') {
-                        client.nextVoteState = 'Schedule';
-                        await listener.update({embeds: [listEmbed]});
-                    } else if (client.nextVoteState == 'Schedule') {
-                        client.nextVoteState = 'Selection Algorithm';
-                        await listener.update({embeds: [algorithmEmbed]});
-                    } else {
-                        const msg = `Invalid nextVoteState error: ${client.nextVoteState}`;
-                        console.log(msg);
-                        await listener.followUp({content: msg+'\nPlease try again later, or notify <@333592723166724106>.', ephemeral: true});
+                    switch (client.nextVoteState) {
+                        case 'Selection Algorithm':
+                            client.nextVoteState = 'Schedule';
+                            await listener.update({embeds: [scheduleEmbed]});
+                            break;
+                        case 'Schedule':
+                            client.nextVoteState = 'Off';
+                            await listener.update({embeds: [offEmbed]});
+                            break;
+                        case 'Off':
+                            client.nextVoteState = 'Selection Algorithm';
+                            await listener.update({embeds: [algorithmEmbed]});
+                            break;
+                        default:
+                            const msg = `Invalid nextVoteState error: ${client.nextVoteState}`;
+                            console.log(msg);
+                            client.emit('log', msg, true, 'Vote State');
+                            await listener.followUp({content: msg+'\nPlease try again later, or notify <@333592723166724106>.', ephemeral: true});
+                            break;
                     }
                 } else {
                     console.error(`Unhandled settings interaction was received: ${listener.customId}`);

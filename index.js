@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits, EmbedBuilder } = require('discord.js');
-const { token, startupVoteState } = require('./config.json');
+const { token, connectURI } = require('./config.json');
+const { MongoClient } = require('mongodb');
 const startJobs = require('./cronjobs/startJobs');
 
 const allIntents = Object.keys(GatewayIntentBits).map( a => GatewayIntentBits[a] );
@@ -10,8 +11,23 @@ const client = new Client({ intents: allIntents });
 
 client.commands = new Collection();
 
-client.voteState = startupVoteState;
-client.nextVoteState = startupVoteState;
+const mongo = new MongoClient(connectURI);
+(async () => {
+	try {
+		await mongo.connect();
+		const bot = await mongo.db('Minotaur').collection('Bot').findOne({});
+		Object.assign(client, bot)
+	} catch (e) {
+		console.log(`Error during Client initialization: ${e}`);
+		if (!client.voteState) {
+			client.voteState = 'Schedule';
+			client.nextVoteState = client.voteState;
+			client.voteOffset = 6;
+		}
+	} finally {
+		await mongo.close();
+	}
+})();
 
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);

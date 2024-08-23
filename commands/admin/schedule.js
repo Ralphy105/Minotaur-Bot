@@ -51,6 +51,7 @@ module.exports = {
         }
 
         const schedule = fs.readFileSync(filename, 'utf-8').split('\r\n');
+        const current = schedule[0];
         const sc = interaction.options.getSubcommand();
         switch(sc) {
             case 'view':
@@ -65,12 +66,18 @@ module.exports = {
                 await interaction.reply(output);
                 break;
             case 'edit':
-                if (interaction.options.getString('targets').indexOf('sex-haver-19') != -1) {
+                await interaction.deferReply();
+                let input = await interaction.options.getString('targets').toLowerCase();
+                if (input.indexOf('sex-haver-19') != -1) {
                     await interaction.reply('Haha you thought L');
                     return;
                 }
-                await interaction.deferReply();
-                let input = await interaction.options.getString('targets').toLowerCase().split(',');
+                input = [...new Set(input.split(','))];
+                const i = input.indexOf(current);
+                if (i != -1) {
+                    interaction.followUp(`The current target, ${current}, cannot be re-added or removed`);
+                    input.splice(i, 1);
+                }
                 try {
                     input = await search(input);
                     const alive = input.filter(e => e.alive && !schedule.includes(e.name)).map(e => e.name);

@@ -1,4 +1,6 @@
 const { CronJob } = require('cron');
+const { MongoClient } = require('mongodb');
+const { connectURI } = require('../config.json');
 
 module.exports = (client) => {
     const hourlyJob = new CronJob('0 0 * * * *', require('./hourly').bind(null, client));
@@ -13,14 +15,17 @@ module.exports = (client) => {
     const voteMsg = new CronJob('1,10,30,50 * * * *', require('./updateMessages').targetMessage.bind(null, client));
     voteMsg.start();
 
-    const voteMinute = 0; // 0 <= voteMinute < 60
+    const voteMinute = Math.floor(client.voteOffset / 60);
+    const voteSecond = Math.floor(client.voteOffset % 60);
     const captchaMinute = (voteMinute+59)%60;
     const captchas = [];
-    const captchaJob = new CronJob(`6 ${captchaMinute} * * * *`, require('./captchaJob').bind(null, captchas, 50));
+    const captchaJob = new CronJob(`6 ${captchaMinute} * * * *`, async () => {
+        if (client.voteState != 'Off') require('./captchaJob').bind(null, captchas, 50);
+    });
     captchaJob.start();
 
     const voteJob = new CronJob(`6 ${voteMinute} * * * *`, async () => {
-        await require('../runVotes')(client, 'ostracize', undefined, captchas);
+        if (client.voteState != 'Off') await require('../runVotes')(client, 'ostracize', undefined, captchas);
         captchas.length = 0;
 	});
 	voteJob.start();
