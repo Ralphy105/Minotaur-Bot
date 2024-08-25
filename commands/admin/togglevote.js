@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require('discord.js');
 const { MongoClient } = require('mongodb');
-const { connectURI } = require('./config.json');
+const { connectURI } = require('../../config.json');
 
 const authorized = [
     '333592723166724106', // Ralphy
