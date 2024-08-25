@@ -55,11 +55,10 @@ module.exports = {
         const sc = interaction.options.getSubcommand();
         switch(sc) {
             case 'view':
-                const time = new Date();
+                let time = Math.floor(new Date().valueOf()/3600000)*3600;
                 const timestamped = schedule.map(e => {
-                    const hour = time.getUTCHours();
-                    const str = `**${time.getUTCMonth()+1}/${time.getUTCDate()}, ${hour}:00 GMT:** \`${e}\``;
-                    time.setUTCHours(hour + 1);
+                    const str = `**<t:${time}:F>** \`${e}\``;
+                    time += 3600;
                     return str;
                 });
                 
