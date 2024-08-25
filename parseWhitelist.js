@@ -40,3 +40,7 @@ module.exports = async (refresh) => {
         await mongo.close();
     }
 };
+
+if (process.argv[2] == 'true') {
+    module.exports(true).then(console.log);
+}

@@ -90,7 +90,7 @@ module.exports = {
                     switch (client.nextVoteState) {
                         case 'Selection Algorithm':
                             client.nextVoteState = 'Schedule';
-                            bot.updateOne({}, {$set: {nextVoteState: 'Schedule'}});
+                            bot.updateOne({}, {$set: {nextVoteState: 'Selection Algorithm'}});
                             await listener.update({embeds: [scheduleEmbed]});
                             break;
                         case 'Schedule':
@@ -100,7 +100,7 @@ module.exports = {
                             break;
                         case 'Off':
                             client.nextVoteState = 'Selection Algorithm';
-                            bot.updateOne({}, {$set: {nextVoteState: 'Schedule'}});
+                            bot.updateOne({}, {$set: {nextVoteState: 'Off'}});
                             await listener.update({embeds: [algorithmEmbed]});
                             break;
                         default:
