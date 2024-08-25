@@ -42,5 +42,5 @@ module.exports = async (refresh) => {
 };
 
 if (process.argv[2] == 'true') {
-    module.exports(true).then(console.log);
+    module.exports(true).then(list => console.log(list.join('\n')));
 }

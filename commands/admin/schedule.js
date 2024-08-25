@@ -62,8 +62,21 @@ module.exports = {
                     time.setUTCHours(hour + 1);
                     return str;
                 });
-                const output = timestamped.join('\n');
-                await interaction.reply(output);
+                
+                let output = timestamped.join('\n');
+                const ops = [];
+                while (output.length > 2000) {
+                    let temp = output.substring(0, 2000);
+                    const n = temp.lastIndexOf('\n');
+                    temp = temp.substring(0, n);
+                    output = output.substring(n+1);
+                    ops.push(temp);
+                }
+                ops.push(output);
+                await interaction.reply(ops.splice(0, 1));
+                for (const op of ops) {
+                    await interaction.followUp(op);
+                }
                 break;
             case 'edit':
                 await interaction.deferReply();
