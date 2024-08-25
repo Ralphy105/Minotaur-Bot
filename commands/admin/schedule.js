@@ -69,7 +69,7 @@ module.exports = {
                 await interaction.deferReply();
                 let input = await interaction.options.getString('targets').toLowerCase();
                 if (input.indexOf('sex-haver-19') != -1) {
-                    await interaction.reply('Haha you thought L');
+                    await interaction.editReply('Haha you thought L');
                     return;
                 }
                 input = [...new Set(input.split(','))];

@@ -21,7 +21,7 @@ const mongo = new MongoClient(connectURI);
 		console.log(`Error during Client initialization: ${e}`);
 		if (!client.voteState) {
 			client.voteState = 'Schedule';
-			client.nextVoteState = client.voteState;
+			client.nextVoteState = bot.nextVoteState;
 			client.voteOffset = 6;
 		}
 	} finally {

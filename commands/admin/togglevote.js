@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require('discord.js');
-const fs = require('node:fs');
+const { MongoClient } = require('mongodb');
+const { connectURI } = require('./config.json');
 
 const authorized = [
     '333592723166724106', // Ralphy
@@ -72,27 +73,34 @@ module.exports = {
 
         const menu = await interaction.reply(reply);
 
-            const collector = menu.createMessageComponentCollector({ time: 20_000 });
+        const collector = menu.createMessageComponentCollector({ time: 20_000 });
 
-            // SETTINGS INTERACTION HANDLING
-            collector.on('collect', async listener => {
-                if (listener.user.id != id) {
-                    await listener.reply({content: `You can't interact with someone else's command!`, ephemeral: true});
-                    return;
-                }
+        // SETTINGS INTERACTION HANDLING
+        collector.on('collect', async listener => {
+            if (listener.user.id != id) {
+                await listener.reply({content: `You can't interact with someone else's command!`, ephemeral: true});
+                return;
+            }
 
-                if (listener.isButton()) {
+            if (listener.isButton()) {
+                const mongo = new MongoClient(connectURI);
+                try {
+                    await mongo.connect();
+                    const bot = mongo.db('Minotaur').collection('Bot');
                     switch (client.nextVoteState) {
                         case 'Selection Algorithm':
                             client.nextVoteState = 'Schedule';
+                            bot.updateOne({}, {$set: {nextVoteState: 'Schedule'}});
                             await listener.update({embeds: [scheduleEmbed]});
                             break;
                         case 'Schedule':
                             client.nextVoteState = 'Off';
+                            bot.updateOne({}, {$set: {nextVoteState: 'Schedule'}});
                             await listener.update({embeds: [offEmbed]});
                             break;
                         case 'Off':
                             client.nextVoteState = 'Selection Algorithm';
+                            bot.updateOne({}, {$set: {nextVoteState: 'Schedule'}});
                             await listener.update({embeds: [algorithmEmbed]});
                             break;
                         default:
@@ -102,9 +110,15 @@ module.exports = {
                             await listener.followUp({content: msg+'\nPlease try again later, or notify <@333592723166724106>.', ephemeral: true});
                             break;
                     }
-                } else {
-                    console.error(`Unhandled settings interaction was received: ${listener.customId}`);
+                } catch (e) {
+                    client.emit('log', `Error: ${e.message}`, true, 'Togglevote Error');
+                    console.error(e);
+                } finally {
+                    await mongo.close();
                 }
-            });
+            } else {
+                console.error(`Unhandled settings interaction was received: ${listener.customId}`);
+            }
+        });
     }
 }
