@@ -78,7 +78,6 @@ module.exports = async (client, type, target, captchas) => {
 
                 if (type == 'ostracize' && hasVoted === true) {
                     alreadyVoted++;
-                    client.emit('log', `User: <@${id}>`, false, 'Vote Fail');
                     return;
                 }
 
@@ -119,6 +118,7 @@ module.exports = async (client, type, target, captchas) => {
                         alreadyVoted++;
                         if (type == 'ostracize') {
                             await avCollection.updateOne({discordId: id}, {$set: {hasVoted: true}});
+                            client.emit('log', `User Already Voted: <@${id}>`, false, 'Vote Fail');
                         }
                         output += `\nReason: You already voted!`;
                     } else if (voted == 'vote/userOstracized') {
