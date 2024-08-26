@@ -57,7 +57,7 @@ module.exports = {
             case 'view':
                 let time = Math.floor(new Date().valueOf()/3600000)*3600;
                 const timestamped = schedule.map(e => {
-                    const str = `**<t:${time}:F>** \`${e}\``;
+                    const str = `**<t:${time}:f>** \`${e}\``;
                     time += 3600;
                     return str;
                 });
