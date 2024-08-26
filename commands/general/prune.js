@@ -35,11 +35,9 @@ module.exports = {
             ops.push(temp);
         }
         ops.push(output);
-        await interaction.reply(ops.splice(0, 1)[0]);
+        await interaction.editReply(ops.splice(0, 1)[0]);
         for (const op of ops) {
             await interaction.followUp(op);
         }
-
-        await interaction.editReply(output);
     }
 };
