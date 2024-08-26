@@ -85,11 +85,11 @@ module.exports = {
                     return;
                 }
                 input = [...new Set(input.split(','))];
-                const i = input.indexOf(current);
-                if (i != -1) {
-                    interaction.followUp(`The current target, ${current}, cannot be re-added or removed`);
-                    input.splice(i, 1);
-                }
+                // const i = input.indexOf(current);
+                // if (i != -1) {
+                //     interaction.followUp(`The current target, ${current}, cannot be re-added or removed`);
+                //     input.splice(i, 1);
+                // }
                 try {
                     input = await search(input);
                     const alive = input.filter(e => e.alive && !schedule.includes(e.name)).map(e => e.name);
@@ -104,8 +104,9 @@ module.exports = {
                         let output = '';
                         if (aliveStr != '') {
                             output += `Successfully added the following names to the schedule:\n\`${aliveStr}\`\n`;
-                            const addNames = alive.join('\r\n');
-                            fs.appendFileSync(filename, '\r\n'+addNames);
+                            let addNames = alive.join('\r\n');
+                            if (current) addNames = `\r\n${addNames}`;
+                            fs.appendFileSync(filename, addNames);
 
                             const msg = `${interaction.user} successfully added ${aliveStr}`;
                             console.log(msg);

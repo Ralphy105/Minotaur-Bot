@@ -44,7 +44,7 @@ module.exports = {
         const input = await interaction.options.getString('targets').toLowerCase().split(',');
 
         try {
-            const targets = fs.readFileSync(filename, 'utf8');
+            const targets = fs.readFileSync(filename, 'utf8').split('\r\n');
             let names = await search(input);
 
             const alive = names.filter(e => e.alive && !targets.includes(e.name)).map(e => e.name);
