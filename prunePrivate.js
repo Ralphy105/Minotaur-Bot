@@ -20,7 +20,7 @@ const parseWhitelist = require('./parseWhitelist');
         }
     }
 
-    console.log(`Whitelist: ${protected}\nInvalid: ${invalids}`);
+    console.log(`Whitelist: ${protected.join('\n')}\nInvalid: ${invalids.join('\n')}`);
 
     fs.writeFile(filename, results.join('\r\n'), err => {
         if (err) console.log(`FileIO error occurred: ${err.message}`);
