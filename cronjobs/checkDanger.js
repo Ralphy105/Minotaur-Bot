@@ -14,7 +14,7 @@ module.exports = async (client) => {
         console.log(`Check danger failed: ${e.message}`);
     }
 
-    const voteNumber = Math.ceil((Date.now().valueOf()-1719511200000)/3600000);
+    const voteNumber = Math.ceil((Date.now()-1719511200000)/3600000);
 
     names = await names.json();
     names = names.players;

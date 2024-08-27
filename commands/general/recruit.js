@@ -60,7 +60,7 @@ module.exports = {
                 .setColor(0x2cdcb4)
                 .setAuthor({name: `Recruiter ${interaction.user.displayName}  --  Broadcast #${sends}`})
                 .setTitle(`MPV Player:  ${name}`)
-                .addFields({name: 'Log Your Result!', value: `Please indicate whether you successfully sent the message, the Venmo name was invalid, or if the message was not sent for any other reason. This message will close in <t:${Math.round(Date.now().valueOf()/1000)+300}:R>`})
+                .addFields({name: 'Log Your Result!', value: `Please indicate whether you successfully sent the message, the Venmo name was invalid, or if the message was not sent for any other reason. This message will close in <t:${Math.round(Date.now()/1000)+300}:R>`})
                 .setFooter({text: 'Thanks for your help!'});
 
             if (interaction.options.getString('platform') == 'computer') {

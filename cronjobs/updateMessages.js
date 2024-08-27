@@ -20,7 +20,7 @@ module.exports = {
             return false;
         }
 
-        const voteNumber = Math.ceil((Date.now().valueOf()-1719511200000)/3600000);
+        const voteNumber = Math.ceil((Date.now()-1719511200000)/3600000);
 
         const endTime = voteNumber*3600+1719511200;
 
