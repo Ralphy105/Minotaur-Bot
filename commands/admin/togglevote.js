@@ -45,6 +45,12 @@ module.exports = {
             .setDescription('Follows a schedule of voting targets, moving on to the next target each hour regardless of the vote outcome.')
             .setFooter({text: current});
 
+        const tiesEmbed = new EmbedBuilder()
+            .setColor(0x0092d1)
+            .setTitle(`Next Hour's Setting: Ties`)
+            .setDescription(`Will use a ***brand spankin' new*** tie algorithm to maximize the amount of people we can vote out!`)
+            .setFooter({text: current});
+
         const offEmbed = new EmbedBuilder()
             .setColor(0x677beb)
             .setTitle(`Next Hour's Setting: Off`)
@@ -65,6 +71,9 @@ module.exports = {
                 break;
             case 'Schedule':
                 reply.embeds = [scheduleEmbed];
+                break;
+            case 'Ties':
+                reply.embeds = [tiesEmbed];
                 break;
             case 'Off':
                 reply.embeds = [offEmbed];
@@ -94,6 +103,11 @@ module.exports = {
                             await listener.update({embeds: [scheduleEmbed]});
                             break;
                         case 'Schedule':
+                            client.nextVoteState = 'Ties';
+                            bot.updateOne({}, {$set: {nextVoteState: 'Ties'}});
+                            await listener.update({embeds: [tiesEmbed]});
+                            break;
+                        case 'Ties':
                             client.nextVoteState = 'Off';
                             bot.updateOne({}, {$set: {nextVoteState: 'Off'}});
                             await listener.update({embeds: [offEmbed]});

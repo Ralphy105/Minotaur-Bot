@@ -11,8 +11,6 @@ module.exports = async names => {
 
     arr = await arr.json().then(res => res.players.map(e => e.username));
 
-    console.log(arr);
-
     if (Array.isArray(names)) {
         return names.map(e => {return {name: e, alive: arr.includes(e)}});
     } else {
