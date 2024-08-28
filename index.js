@@ -16,7 +16,7 @@ const mongo = new MongoClient(connectURI);
 	try {
 		await mongo.connect();
 		const bot = await mongo.db('Minotaur').collection('Bot').findOne({});
-		Object.assign(client, bot)
+		Object.assign(client, bot);
 	} catch (e) {
 		console.log(`Error during Client initialization: ${e}`);
 		if (!client.voteState) {
