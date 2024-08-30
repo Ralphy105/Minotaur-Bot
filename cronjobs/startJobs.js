@@ -1,6 +1,4 @@
-const { CronJob } = require('cron');
-const { MongoClient } = require('mongodb');
-const { connectURI } = require('../config.json');
+const { CronJob, CronTime } = require('cron');
 
 module.exports = (client) => {
     const hourlyJob = new CronJob('0 0 * * * *', require('./hourly').bind(null, client));
@@ -19,12 +17,12 @@ module.exports = (client) => {
     const voteSecond = Math.floor(client.voteOffset % 60);
     const captchaMinute = (voteMinute+59)%60;
     const captchas = [];
-    const captchaJob = new CronJob(`6 ${captchaMinute} * * * *`, async () => {
-        if (client.voteState != 'Off') require('./captchaJob').bind(null, captchas, 50);
+    const captchaJob = new CronJob(`${voteSecond} ${captchaMinute} * * * *`, async () => {
+        if (client.voteState != 'Off') await require('./captchaJob')(captchas, 50);
     });
     captchaJob.start();
 
-    const voteJob = new CronJob(`6 ${voteMinute} * * * *`, async () => {
+    const voteJob = new CronJob(`${voteSecond} ${voteMinute} * * * *`, async () => {
         if (client.voteState != 'Off') await require('../runVotes')(client, 'ostracize', undefined, captchas);
         captchas.length = 0;
 	});

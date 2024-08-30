@@ -8,5 +8,6 @@ module.exports = async (captchas, num) => {
             captchas.push(captcha);
         }
     } catch (e) {
+        console.log(`Error filling captchas: ${e}`);
     }
 }

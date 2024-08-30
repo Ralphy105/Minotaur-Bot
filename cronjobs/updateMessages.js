@@ -16,7 +16,7 @@ module.exports = {
         // console.log(targetMessage.embeds[0].title.includes(target));
 
         if (targetMessage.embeds[0].title.includes(target)) {
-            console.log("Target is the same! No edit");
+            // console.log("Target is the same! No edit");
             return false;
         }
 

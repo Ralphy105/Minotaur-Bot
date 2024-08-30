@@ -58,6 +58,10 @@ module.exports = async (voteState) => {
             }
         } else if (voteState == 'Schedule') {
             return schedule[0];
+        } else if (voteState == 'Ties') {
+            return 'Currently automating ostracize ties. Please do not vote.'
+        } else if (voteState == 'Off') {
+            return 'No target currently';
         } else {
             console.log(`No votes sent, invalid voteState: ${voteState}`);
         }

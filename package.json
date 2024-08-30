@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "minotaurproject": "file:",
     "mongodb": "^6.8.0",
+    "mongoose": "^8.5.4",
     "node-capsolver": "^1.0.8",
     "quick.db": "^9.1.7"
   }

@@ -38,8 +38,8 @@ module.exports = {
             return;
         }
 
-        const type = await interaction.options.get('type').value;
-        const target = await interaction.options.getString('target');
+        const type = interaction.options.get('type').value;
+        const target = interaction.options.getString('target');
         let msg = `${interaction.user} sent ${type} votes`;
 
         if (target) {

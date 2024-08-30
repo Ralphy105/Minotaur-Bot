@@ -79,7 +79,7 @@ module.exports = {
                 break;
             case 'edit':
                 await interaction.deferReply();
-                let input = await interaction.options.getString('targets').toLowerCase();
+                let input = interaction.options.getString('targets').toLowerCase();
                 if (input.indexOf('sex-haver-19') != -1) {
                     await interaction.editReply('Haha you thought L');
                     return;

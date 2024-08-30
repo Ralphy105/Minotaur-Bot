@@ -15,12 +15,18 @@ const authorized = [
     '1256440832727191636', // Gem
 ];
 
-const filename = 'targets.txt';
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('target')
         .setDescription('Add a target to the list! Use CSV format, with quotes for multiple.')
+        .addStringOption(option =>
+            option.setName('list')
+                .setRequired(true)
+                .setDescription('Choose which list to add targets to!')
+                .addChoices(
+                    { name: 'Global (NSA)', value: 'globalTargets.txt' },
+                    { name: 'Local (Minotaur)', value: 'targets.txt' }
+                ))
         .addStringOption(option =>
             option.setName('action')
                 .setRequired(true)
@@ -41,9 +47,10 @@ module.exports = {
 
         await interaction.deferReply();
 
-        const input = await interaction.options.getString('targets').toLowerCase().split(',');
+        const input = interaction.options.getString('targets').toLowerCase().split(',');
 
         try {
+            const filename = interaction.options.getString('list');
             const targets = fs.readFileSync(filename, 'utf8').split('\r\n');
             let names = await search(input);
 
