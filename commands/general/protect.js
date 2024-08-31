@@ -31,7 +31,7 @@ module.exports = {
             const existing = await whitelist.findOne({discordId: id});
 
             // Adds one if none exists, because option {upsert: true}
-            await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName}}, {upsert: true});
+            await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName, ostracized: false}}, {upsert: true});
 
             const output = `You have been successfully ${existing ? 'updated within' : 'added to'} the system! You are now under official protection of Minotaur and the Northstar Accord.\nSubmitted username: \`${venmo}\``;
             await interaction.reply({content: output, ephemeral: inGuild});

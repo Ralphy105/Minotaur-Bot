@@ -70,7 +70,7 @@ module.exports = {
                             const token = await getToken(id, email, password);
                             await avCollection.updateOne({discordId: id}, {$set: {validInfo: true, token: token}});
                             const venmo = jwt.decode(token).username;
-                            await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName}}, {upsert: true});
+                            await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName, ostracized: false}}, {upsert: true});
                             await interaction.followUp({content: `Successfully generated an account token for autovoting. While I'm at it, I enrolled you in my Member Protection System as well!`, ephemeral: inGuild});
                         } catch (e) {
                             const msg = `/autovote: Couldn't get token for user ${id}/${username}\nError: ${e.message}`;
@@ -117,7 +117,7 @@ module.exports = {
                                 const token = await getToken(id, email, password);
                                 await avCollection.updateOne({discordId: id}, {$set: {validInfo: true, token: token}});
                                 const venmo = jwt.decode(token).username;
-                                await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName}}, {upsert: true});
+                                await whitelist.updateOne({discordId: id}, {$set: {vName: venmo, dName: username, dDisplayName: displayName, ostracized: false}}, {upsert: true});
                                 await interaction.followUp({content: `Successfully generated an account token for autovoting. While I'm at it, if you weren't already enrolled in my Member Protection System, you've just been added!`, ephemeral: inGuild});
                             } catch (e) {
                                 const msg = `/autovote: Couldn't get token for user ${id}/${username}\nError: ${e.message}`;
