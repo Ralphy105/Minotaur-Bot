@@ -21,14 +21,8 @@ module.exports = async (refresh) => {
             console.log('Updating Whitelist');
             const results = await search(oldWhitelist)
 
-            const ostracized = results.filter(e => !e.alive);
-
-            const promises = [];
-            for (const venmo of ostracized) {
-                promises.push(whitelistCol.updateOne({vName: venmo}, {$set: {ostracized: true}}));
-            }
-
-            await Promise.allSettled(promises);
+            const ostracized = results.filter(e => !e.alive).map(e => e.name);
+            await whitelistCol.updateMany({vName: {$in: ostracized}}, {$set: {ostracized: true}});
 
             const whitelist = results.filter(e => e.alive).map(e => e.name);
 
@@ -40,7 +34,3 @@ module.exports = async (refresh) => {
         await mongo.close();
     }
 };
-
-if (process.argv[2] == 'true') {
-    module.exports(true).then(list => console.log(list.join('\n')));
-}

@@ -69,9 +69,8 @@ const commandFolders = fs.readdirSync(foldersPath);
 	client.on('log', async (msg, public, context) => {
 		const embed = new EmbedBuilder()
 			.setColor(0x2b2d31)
-			.setAuthor({name: new Date().toUTCString()})
-			.setDescription(msg);
-		if (context) embed.setTitle(context);
+			.setDescription(`**<t:${Math.floor(Date.now()/1000)}:f>**\n${msg}`);
+		if (context) embed.setAuthor({name: context});
 
 		await logChannel.send({embeds: [embed]});
 		if (public === true) modLogChannel.send({embeds: [embed]});

@@ -23,10 +23,6 @@ module.exports = async (client) => {
             client.emit('log', msg, true);
             client.voteState = next;
             await bot.updateOne({}, {$set: {voteState: next}});
-        } else {
-            const msg = `Vote State remaining as: ${next}`;
-            console.log(msg);
-            client.emit('log', msg, true);
         }
     } catch (e) {
         console.error(e);
