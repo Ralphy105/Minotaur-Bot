@@ -11,7 +11,7 @@ module.exports = async (client) => {
     prune('globalTargets.txt', true);
     updateVoteState(client);
     
-    const { playersRemaining } = await fetch('https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/stats');
+    const { playersRemaining } = await fetch('https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/stats').then(res => res.json());
     const msg = `Players Remaining: ${playersRemaining}`;
     console.log(msg);
     client.emit('log', msg, true, 'Players Remaining')
