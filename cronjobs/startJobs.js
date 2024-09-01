@@ -1,4 +1,4 @@
-const { CronJob, CronTime } = require('cron');
+const { CronJob } = require('cron');
 
 module.exports = (client) => {
     const hourlyJob = new CronJob('0 0 * * * *', require('./hourly').bind(null, client));

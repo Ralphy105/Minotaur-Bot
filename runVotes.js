@@ -154,7 +154,7 @@ module.exports = async (client, type, target, captchas) => {
             const globalTargets = fs.readFileSync('./globalTargets.txt', 'utf-8').toLowerCase().split('\r\n');
 
             let tieVotes = leaderboard[0].score;
-            if (!globalTargets.includes(leaderboard[0].username)) tieVotes++;
+            if (!globalTargets.includes(leaderboard[0].username) || !tieVotes) tieVotes++;
 
             const toVote = [];
             let votesLeft = autovoters.length;
@@ -171,10 +171,6 @@ module.exports = async (client, type, target, captchas) => {
                 if (toVote.length == targets.length) break;
             }
 
-            const msg = 'Sending Tie Votes:\n' + toVote.map(({venmo, voteCount}) => `Sending ${voteCount} votes for \`${venmo}\``).join('\n');
-            console.log(msg);
-            client.emit('log', msg, true, )
-
             const startedVotes = new Date();
             for (const { venmo, voteCount } of toVote) {
                 for (let i = 0; i < voteCount; i++) {
@@ -183,7 +179,9 @@ module.exports = async (client, type, target, captchas) => {
                     votePromises.push(voteAndRespond(autovoters[num], venmo, avCollection, num, startedVotes));
                 }
             }
-            console.log(`All votes sent ${new Date() - start} ms from start!`)
+            const msg = `Sent votes at ${new Date() - start} ms:\n${toVote.map(({venmo, voteCount}) => `${voteCount}: \`${venmo}\``).join('\n')}`;
+            console.log(msg);
+            client.emit('log', msg, true);
         } else if (client.voteState != 'Off') {
             // target = 'clearlykay';
             if (!target) {
