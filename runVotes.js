@@ -151,7 +151,7 @@ module.exports = async (client, type, target, captchas) => {
             }).then(leaderboard => leaderboard.json()).then(leaderboard => leaderboard.players);
 
             const targets = fs.readFileSync('./targets.txt', 'utf-8').toLowerCase().split('\r\n');
-            const globalTargets = fs.readFileSync('./globalTargets.txt', 'utf-8').toLowerCase().split('\r\n');
+            const globalTargets = fs.readFileSync('./globaltargets.txt', 'utf-8').toLowerCase().split('\r\n');
 
             let tieVotes = leaderboard[0].score;
             if (!globalTargets.includes(leaderboard[0].username) || !tieVotes) tieVotes++;

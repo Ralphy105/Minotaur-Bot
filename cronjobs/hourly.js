@@ -8,7 +8,7 @@ module.exports = async (client) => {
     resetVoted(); // async
     updateWhitelist(true); // async
     prune('targets.txt', true); // async
-    prune('globalTargets.txt', true);
+    prune('globaltargets.txt', true);
     updateVoteState(client);
     
     const { playersRemaining } = await fetch('https://irk0p9p6ig.execute-api.us-east-1.amazonaws.com/prod/stats').then(res => res.json());

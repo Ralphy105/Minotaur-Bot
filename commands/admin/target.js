@@ -24,7 +24,7 @@ module.exports = {
                 .setRequired(true)
                 .setDescription('Choose which list to add targets to!')
                 .addChoices(
-                    { name: 'Global (NSA)', value: 'globalTargets.txt' },
+                    { name: 'Global (NSA)', value: 'globaltargets.txt' },
                     { name: 'Local (Minotaur)', value: 'targets.txt' }
                 ))
         .addStringOption(option =>
