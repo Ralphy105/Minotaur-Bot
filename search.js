@@ -11,9 +11,10 @@ module.exports = async names => {
 
     arr = await arr.json().then(res => res.players.map(e => e.username));
 
-    if (Array.isArray(names)) {
+    if (typeof names == 'string') names = [names];
+
+    if (Array.isArray(names))
         return names.map(e => {return {name: e, alive: arr.includes(e)}});
-    } else {
-        return arr.includes(names);
-    }
+    else
+        throw new Error(`Invalid search input: ${names}`);
 }

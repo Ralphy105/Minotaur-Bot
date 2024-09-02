@@ -1,5 +1,4 @@
-const fs = require('node:fs');
-const userExists = require("./search");
+const parseList = require('./parseList');
 const { MongoClient } = require('mongodb');
 const { connectURI } = require('./config.json');
 const checkWhitelist = require('./checkWhitelist');
@@ -9,7 +8,7 @@ module.exports = async (voteState) => {
     const mongo = new MongoClient(connectURI);
     try {
         await mongo.connect();
-        const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\r\n');
+        const schedule = parseList.plain('scheduledTargets.txt');
 
         const valid = schedule[0] != '' && !(await checkWhitelist(schedule[0]));
         
@@ -25,7 +24,7 @@ module.exports = async (voteState) => {
             const topTargets = ostracizeLeaderboardJson.players;
             const topFiveTargets = topTargets.slice(0,5); // Returns a NEW OBJECT of first 5 items of the arary -- doesn't alter calling object
 
-            const targets = fs.readFileSync('targets.txt','utf-8').toLowerCase().split('\r\n');
+            const targets = parseList.plain('./targets.txt');;
         
             const protected = mongo.db('Minotaur').collection('Whitelist').find();
             const members = [];

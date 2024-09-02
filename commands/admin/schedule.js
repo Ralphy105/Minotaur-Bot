@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const parseList = require('../../parseList');
 const fs = require('node:fs');
 const search = require('../../search');
 
@@ -50,7 +51,7 @@ module.exports = {
             return;
         }
 
-        const schedule = fs.readFileSync(filename, 'utf-8').split('\r\n');
+        const schedule = await parseList.alive(filename);
         const current = schedule[0];
         const sc = interaction.options.getSubcommand();
         switch(sc) {

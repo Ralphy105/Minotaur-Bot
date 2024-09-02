@@ -1,9 +1,9 @@
 const fs = require('node:fs');
-const search = require('./search');
+const parseList = require('./parseList');
 const parseWhitelist = require('./parseWhitelist');
 
 module.exports = async (filename, filterWhitelist) => {
-    let targets = await search(fs.readFileSync(filename,'utf8').toLowerCase().split('\r\n'));
+    let targets = await parseList.searched(filename);
     const invalids = targets.filter(e => !e.alive).map(e => e.name);
     targets = targets.filter(e => e.alive).map(e => e.name);
     
@@ -24,7 +24,7 @@ module.exports = async (filename, filterWhitelist) => {
         results = targets;
     }
 
-    console.log(`Whitelist: ${protected.join('\n')}\nInvalid: ${invalids.join('\n')}`);
+    if (process.argv[2]) console.log(`Whitelist: ${protected.join('\n')}\nInvalid: ${invalids.join('\n')}`);
 
     fs.writeFile(filename, results.join('\r\n'), err => {
         if (err) console.log(`FileIO error occurred: ${err.message}`);

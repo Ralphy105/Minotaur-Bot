@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const parseList = require('./parseList');
 const { MongoClient } = require('mongodb');
 const { connectURI } = require('./config.json');
 
@@ -8,7 +9,7 @@ module.exports = async (client) => {
         await mongo.connect();
         const bot = mongo.db('Minotaur').collection('Bot');
         if (client.voteState == 'Schedule') {
-            const schedule = fs.readFileSync('scheduledTargets.txt','utf-8').toLowerCase().split('\r\n');
+            const schedule = parseList.plain('scheduledTargets.txt');
             schedule.splice(0, 1);
             fs.writeFile('scheduledTargets.txt', schedule.join('\r\n'), err => {
                 if (err) console.log(`IMPORTANT: Failed to update target schedule: ${err.message}`);

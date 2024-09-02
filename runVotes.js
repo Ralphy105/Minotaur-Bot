@@ -1,6 +1,7 @@
 const sendVote = require('./voter');
 const { MongoClient } = require('mongodb');
 const { connectURI } = require('./config.json');
+const parseList = require('./parseList');
 const fs = require('node:fs');
 const getTarget = require('./selectTarget');
 const { EmbedBuilder } = require('discord.js');
@@ -150,8 +151,8 @@ module.exports = async (client, type, target, captchas) => {
                 },
             }).then(leaderboard => leaderboard.json()).then(leaderboard => leaderboard.players);
 
-            const targets = fs.readFileSync('./targets.txt', 'utf-8').toLowerCase().split('\r\n');
-            const globalTargets = fs.readFileSync('./globaltargets.txt', 'utf-8').toLowerCase().split('\r\n');
+            const targets = parseList.plain('./targets.txt');
+            const globalTargets = parseList.plain('./globaltargets.txt');
 
             let tieVotes = leaderboard[0].score;
             if (!globalTargets.includes(leaderboard[0].username) || !tieVotes) tieVotes++;

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('node:fs');
+const parseList = require('../../parseList');
 const search = require('../../search');
 
 const authorized = [
@@ -51,7 +52,7 @@ module.exports = {
 
         try {
             const filename = interaction.options.getString('list');
-            const targets = fs.readFileSync(filename, 'utf8').split('\r\n');
+            const targets = parseList.plain(filename);
             let names = await search(input);
 
             const alive = names.filter(e => e.alive && !targets.includes(e.name)).map(e => e.name);

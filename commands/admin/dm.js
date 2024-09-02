@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { MongoClient } = require('mongodb');
 const { connectURI } = require('../../config.json');
-const fs = require('node:fs');
+const parseList = require('../../parseList');
 
 const authorized = [
     '333592723166724106', // Ralphy
@@ -23,7 +23,7 @@ module.exports = {
         const minotaur = await interaction.client.guilds.fetch('1255539802582028349');
 
         const members = await minotaur.members.fetch().catch(console.error);
-        const avIds = fs.readFileSync('./ostracizedVoters.txt','utf8').toLowerCase().split('\r\n');
+        const avIds = parseList.plain('./ostracizedVoters.txt');
         let sent = 0;
         let memberCount = 0;
 
