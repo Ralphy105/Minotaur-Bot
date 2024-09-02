@@ -1,7 +1,7 @@
 const { CronJob } = require('cron');
 
 module.exports = (client) => {
-    const hourlyJob = new CronJob('0 0 * * * *', require('./hourly').bind(null, client));
+    const hourlyJob = new CronJob('10 0 * * * *', require('./hourly').bind(null, client));
     hourlyJob.start();
 
     const protectJob = new CronJob('10/20 * * * *', require('./checkDanger').bind(null, client));
