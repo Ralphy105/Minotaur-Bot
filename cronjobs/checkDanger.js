@@ -42,8 +42,10 @@ module.exports = async (client) => {
     const channel = guild.channels.cache.get('1256113733198024745');
 
     if (danger.length) {
-        await channel.send(`Vote Number ${voteNumber}: A protected member/ally is in danger! Please vote to ostracize \`${target[0].name}\`\n@everyone`);
-        console.log(`Members on the leaderboard: `,danger);
+        if (client.voteState != 'Ties') await channel.send(`Vote Number ${voteNumber}: A protected member/ally is in danger! Please vote to ostracize \`${target[0].name}\`\n@everyone`);
+        const msg = `Members on the leaderboard:\n${danger.map(e => `${e.name} at position #${e.pos}`).join('\n')}`;
+        console.log(msg);
+        client.emit('log', msg, false, 'Danger');
     } else {
         console.log(`No protected users in top 5, at ${Date()}`);
     }
